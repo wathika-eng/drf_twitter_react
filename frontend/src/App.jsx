@@ -1,6 +1,7 @@
 import React from 'react';
 import HomePage from './pages/HomePage';
 import AdvocatePage from './pages/AdvocatePage';
+import Nav from './components/Nav';
 import {
   createBrowserRouter,
   RouterProvider,
@@ -19,7 +20,10 @@ const router = createBrowserRouter([
 function App() {
 
   return (
-    <RouterProvider router={router} />
+    <div className='container mx-auto'>
+      <Nav />
+      <RouterProvider router={router} />
+    </div>
   );
 }
 
