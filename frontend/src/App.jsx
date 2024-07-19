@@ -2,21 +2,34 @@
 import React from 'react';
 import HomePage from './pages/HomePage';
 import AdvocatePage from './pages/AdvocatePage';
-import Layout from './components/Layout'; // Import the Layout component
+import Layout from './components/Layout';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-
+import PrivateRoute from './utils/PrivateRoute';
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />, // Use the Layout component
+    element: <Layout />,
     children: [
       {
-        path: "/", // Home page route
-        element: <HomePage />,
+        path: "/",
+        element: <PrivateRoute>
+          <HomePage />
+        </PrivateRoute>
       },
       {
-        path: "/advocate/:username", // Advocate page route
+        path: "/advocate/:username",
         element: <AdvocatePage />,
+      },
+      {
+        path: "/login",
+        element: <Login />,
+
+      },
+      {
+        path: "/signup",
+        element: <Signup />,
       }
     ]
   }
@@ -29,3 +42,12 @@ function App() {
 }
 
 export default App;
+
+// const Logout = () => {
+//   localStorage.clear();
+//   return <Navigate to='/login' />;
+// };
+// const RegandLogout = () => {
+//   localStorage.clear();
+//   return <Signup />;
+// };

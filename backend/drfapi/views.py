@@ -18,6 +18,7 @@ class AdvocatePagination(PageNumberPagination):
 
 
 @api_view(["GET", "POST"])
+@permission_classes([IsAuthenticated])
 def advocates_list(request):
     if request.method == "GET":
         query = request.GET.get("query", "")
