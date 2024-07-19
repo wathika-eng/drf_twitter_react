@@ -1,10 +1,10 @@
 import React from 'react';
-
+import { Link } from 'react-router-dom';
 const Nav = () => {
     return (
         <div className="navbar bg-base-100">
             <div className="flex-1">
-                <a className="btn btn-ghost text-xl">Twixie</a>
+                <Link to={'/'} className="btn btn-ghost">Home</Link>
             </div>
             <div className="flex-none gap-2">
                 <div className="form-control">

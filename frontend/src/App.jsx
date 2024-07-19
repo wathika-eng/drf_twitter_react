@@ -1,29 +1,30 @@
+// src/App.jsx
 import React from 'react';
 import HomePage from './pages/HomePage';
 import AdvocatePage from './pages/AdvocatePage';
-import Nav from './components/Nav';
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+import Layout from './components/Layout'; // Import the Layout component
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: < HomePage />,
-  },
-  {
-    path: "/advocate/:username",
-    element: <AdvocatePage />,
+    element: <Layout />, // Use the Layout component
+    children: [
+      {
+        path: "/", // Home page route
+        element: <HomePage />,
+      },
+      {
+        path: "/advocate/:username", // Advocate page route
+        element: <AdvocatePage />,
+      }
+    ]
   }
 ]);
-function App() {
 
+function App() {
   return (
-    <div className='container mx-auto'>
-      <Nav />
-      <RouterProvider router={router} />
-    </div>
+    <RouterProvider router={router} />
   );
 }
 

@@ -7,35 +7,39 @@ from .serializers import AdvocateSerializer, CompanySerializer
 from django.db.models import Q
 from rest_framework import status, viewsets
 from rest_framework.views import APIView
+from rest_framework.settings import api_settings
+from rest_framework.pagination import PageNumberPagination
 
 
-@api_view(["GET", "POST", "DELETE"])
-# @permission_classes([IsAuthenticated])
+class AdvocatePagination(PageNumberPagination):
+    page_size = 10  # Number of items per page
+    page_size_query_param = "page_size"
+    max_page_size = 10
+
+
+@api_view(["GET", "POST"])
 def advocates_list(request):
     if request.method == "GET":
-
-        # /?query
-        query = request.GET.get("query")
-        print(query)  # check if we have a query in the url
-
-        if query == None:
-            query = ""
-
-        # use Q to search for multiple fields, take care not to use &
+        query = request.GET.get("query", "")
         advocates = Advocate.objects.filter(
             Q(username__icontains=query) | Q(bio__icontains=query)
-        )  # find a username incase it contains at least one letter
-        # advocates = Advocate.objects.all()
-        serialized = AdvocateSerializer(advocates, many=True)
-        return Response(serialized.data, status=status.HTTP_200_OK)
+        )
+
+        # Apply pagination
+        paginator = AdvocatePagination()
+        paginated_advocates = paginator.paginate_queryset(advocates, request)
+        serialized = AdvocateSerializer(paginated_advocates, many=True)
+
+        # Get the paginated response
+        return paginator.get_paginated_response(serialized.data)
+
     if request.method == "POST":
         Advocate.objects.create(
             profile_pic=request.data["profile_pic"],
             username=request.data["username"],
             bio=request.data["bio"],
         )
-        serializer = AdvocateSerializer(Advocate, many=False)
-        return Response("added")
+        return Response("Added", status=status.HTTP_201_CREATED)
 
 
 @api_view(["GET", "PUT", "DELETE"])
@@ -90,6 +94,8 @@ def company_details(request, pk=None):
 
 
 # class AdvocateDetails(APIView):
+#     pagination_class = api_settings.DEFAULT_PAGINATION_CLASS
+
 #     def get(self, request):
 #         advocates = Advocate.objects.all()
 #         serialized = AdvocateSerializer(advocates, many=True)

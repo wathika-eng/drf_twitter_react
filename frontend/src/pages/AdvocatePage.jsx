@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
+
 const AdvocatePage = () => {
     const params = useParams();
     const username = params.username;
@@ -18,15 +19,26 @@ const AdvocatePage = () => {
             console.error("Error fetching data:", error.message);
         }
     };
+    // companyData = advocate.company.map((company, index) => {
+    //     return <li key={index}>{company.name}</li>;
+    // });
+    // console.log(companyData);
     console.log(advocate);
     return (
         <div>
-            <h1 className="text-center">
-
-            </h1>
+            <h1 className="text-center text-2xl">@{advocate.username}</h1>
             <img src={advocate.profile_pic} alt={advocate.username} />
+            <li>Bio: {advocate.bio}</li>
+            {/* <li>Location: {advocate.location}</li> */}
+            <li>Company: {advocate.company?.name}</li>
+            <div>
+                <Link to="/" className="btn btn-error-ghost">
+                    Go back
+                </Link>
+            </div>
         </div>
     );
 };
-
+// use ? for optional chaining in nested objects 
+// without it, the code will break if the nested object is not found null
 export default AdvocatePage;
