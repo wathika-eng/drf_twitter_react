@@ -21,8 +21,10 @@ const AdvocatePage = () => {
     console.log(advocate);
     return (
         <div>
-            <h1 className="text-center">{advocate.bio}</h1>
-            
+            <h1 className="text-center">
+
+            </h1>
+            <img src={advocate.profile_pic} alt={advocate.username} />
         </div>
     );
 };

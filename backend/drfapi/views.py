@@ -30,7 +30,9 @@ def advocates_list(request):
         return Response(serialized.data, status=status.HTTP_200_OK)
     if request.method == "POST":
         Advocate.objects.create(
-            username=request.data["username"], bio=request.data["bio"]
+            profile_pic=request.data["profile_pic"],
+            username=request.data["username"],
+            bio=request.data["bio"],
         )
         serializer = AdvocateSerializer(Advocate, many=False)
         return Response("added")
@@ -49,7 +51,7 @@ def advocate_details(request, username=None):
             return Response(serialized.data)
 
     if request.method == "PUT":
-        advocate = get_object_or_404(Advocate, pk=pk)
+        advocate = get_object_or_404(Advocate, username=username)
         serializer = AdvocateSerializer(advocate, data=request.data)
         if serializer.is_valid():
             serializer.save()

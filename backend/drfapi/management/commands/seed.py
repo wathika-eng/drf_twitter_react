@@ -3,6 +3,7 @@ from django.core.management.base import BaseCommand
 from django.db import connection, transaction
 from faker import Faker
 from drfapi.models import Advocate, Company
+import random
 
 fake = Faker()
 
@@ -41,13 +42,28 @@ class Command(BaseCommand):
             company = Company.objects.create(name=company_name, bio=company_bio)
 
             username = fake.user_name()
+            profile_pic = self.generate_real_profile_pic()
             advocate_bio = (
                 fake.text(max_nb_chars=40)
                 if fake.boolean(chance_of_getting_true=70)
                 else None
             )
             Advocate.objects.create(
-                username=username, bio=advocate_bio, company=company
+                profile_pic=profile_pic,
+                username=username,
+                bio=advocate_bio,
+                company=company,
             )
 
         self.stdout.write(self.style.SUCCESS("Successfully populated the DB!"))
+
+    def generate_real_profile_pic(self):
+        # Example list of real profile picture URLs
+        profile_pics = [
+            "https://randomuser.me/api/portraits/men/1.jpg",
+            "https://randomuser.me/api/portraits/women/2.jpg",
+            "https://randomuser.me/api/portraits/men/3.jpg",
+            "https://randomuser.me/api/portraits/women/4.jpg",
+            "https://randomuser.me/api/portraits/men/5.jpg",
+        ]
+        return random.choice(profile_pics)

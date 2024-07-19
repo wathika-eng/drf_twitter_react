@@ -1,23 +1,32 @@
 from rest_framework import serializers
 from .models import Advocate, Company
+from urllib.parse import unquote
 
 
 class CompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
         fields = "__all__"
-    def get_count(self,obj):
+
+    def get_count(self, obj):
         # county = None
         count = obj.advocate.set.count()
         return count
 
+
 class AdvocateSerializer(serializers.ModelSerializer):
     # pass
-    company = CompanySerializer()  # make companies inside advocate
-    
+    company = CompanySerializer()  # nested serializer
+
+    # https://stackoverflow.com/questions/26379849/return-image-url-in-django-rest-framework
+    profile_pic = serializers.SerializerMethodField("get_profile_pic_url")
+
     class Meta:
         model = Advocate
-        fields = ["username", "bio", "company"]
+        fields = ["username", "bio", "company", "profile_pic"]
+
+    def get_profile_pic_url(self, obj):
+        return unquote(obj.profile_pic.url.lstrip("/"))
 
     # def create(self, validated_data):
     #     company_data = validated_data.pop('company')
