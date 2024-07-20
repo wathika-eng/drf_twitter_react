@@ -1,8 +1,8 @@
 import React from 'react';
-
+import Form from '../components/Form';
 const Signup = () => {
     return (
-        <div>Signup</div>
+        <Form route="/api/signup/" method="signup" />
     );
 };
 

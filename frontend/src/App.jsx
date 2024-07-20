@@ -5,8 +5,13 @@ import AdvocatePage from './pages/AdvocatePage';
 import Layout from './components/Layout';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import PrivateRoute from './utils/PrivateRoute';
+
+const Logout = () => {
+  localStorage.clear();
+  return <Navigate to='/login' />;
+};
 const router = createBrowserRouter([
   {
     path: "/",
@@ -30,6 +35,15 @@ const router = createBrowserRouter([
       {
         path: "/signup",
         element: <Signup />,
+      },
+      {
+        path: "/logout",
+        element: <Logout />,
+      },
+      // redirect on wrong path
+      {
+        path: "*",
+        element: <Navigate to="/" />
       }
     ]
   }

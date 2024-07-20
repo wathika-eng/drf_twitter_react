@@ -1,10 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 const Nav = () => {
-    
+
     const search = (e) => {
         let query = e.target.value;
         console.log(query);
+    };
+    const handleLogout = () => {
+        alert('Logout');
     };
     return (
         <div className="navbar bg-base-100">
@@ -33,7 +36,7 @@ const Nav = () => {
                             </a>
                         </li>
                         <li><a>Settings</a></li>
-                        <li><a>Logout</a></li>
+                        <li><Link onClick={handleLogout} to="/logout">Logout</Link></li>
                     </ul>
                 </div>
             </div>

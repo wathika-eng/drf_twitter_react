@@ -14,6 +14,21 @@ class CompanySerializer(serializers.ModelSerializer):
         return count
 
 
+class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = Advocate
+        fields = ["username", "password", "bio", "profile_pic", "company"]
+
+    def create(self, validated_data):
+        password = validated_data.pop("password")
+        user = Advocate(**validated_data)
+        user.set_password(password)
+        user.save()
+        return user
+
+
 class AdvocateSerializer(serializers.ModelSerializer):
     # pass
     company = CompanySerializer()  # nested serializer
@@ -24,9 +39,14 @@ class AdvocateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Advocate
         fields = ["username", "bio", "company", "profile_pic"]
+        extra_kwargs = {"password": {"write_only": True}}
+
+    def create(self, validated_data):
+        user = Advocate.objects.create_user(**validated_data)
+        return user
 
     def get_profile_pic_url(self, obj):
-        return unquote(obj.profile_pic.url.lstrip("/"))
+        return unquote(obj.profile_pic.url.lstrip("/media"))
 
     # def create(self, validated_data):
     #     company_data = validated_data.pop('company')

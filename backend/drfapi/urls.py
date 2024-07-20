@@ -12,4 +12,6 @@ urlpatterns = [
     path("advocates/<str:username>/", views.advocate_details, name="user"),
     path("companies/", views.company_details, name="company-list"),
     path("companies/<int:pk>/", views.company_details, name="company-detail"),
+    path("signup/", views.SignUp.as_view(), name="signup"),
+    path("login/", views.MyTokenObtainPairView.as_view(), name="token_obtain_pair"),
 ]

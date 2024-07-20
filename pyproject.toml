@@ -19,6 +19,9 @@ djangorestframework-simplejwt = "^5.3.1"
 django-cors-headers = "^4.4.0"
 redis = "^5.0.7"
 pillow = "^10.4.0"
+gunicorn = "^22.0.0"
+honcho = "^1.1.0"
+whitenoise = "^6.7.0"
 
 
 [build-system]

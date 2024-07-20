@@ -90,9 +90,11 @@ CACHES = {
     }
 }
 CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
+CSRF_TRUSTED_ORIGINS = ["http://localhost:5173"]
 
 WSGI_APPLICATION = "backend.wsgi.application"
 
+AUTH_USER_MODEL = "drfapi.Advocate"
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
@@ -181,5 +183,5 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 
-MEDIA_ROOT = os.path.join(BASE_DIR, "/")
-MEDIA_URL = "/"
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")

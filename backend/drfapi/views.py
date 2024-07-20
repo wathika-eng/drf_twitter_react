@@ -1,14 +1,17 @@
 from django.shortcuts import render, get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Advocate, Company
-from .serializers import AdvocateSerializer, CompanySerializer
+from .serializers import AdvocateSerializer, CompanySerializer, UserSerializer
 from django.db.models import Q
 from rest_framework import status, viewsets
 from rest_framework.views import APIView
 from rest_framework.settings import api_settings
 from rest_framework.pagination import PageNumberPagination
+from rest_framework import generics
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
 class AdvocatePagination(PageNumberPagination):
@@ -18,7 +21,7 @@ class AdvocatePagination(PageNumberPagination):
 
 
 @api_view(["GET", "POST"])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def advocates_list(request):
     if request.method == "GET":
         query = request.GET.get("query", "")
@@ -34,13 +37,27 @@ def advocates_list(request):
         # Get the paginated response
         return paginator.get_paginated_response(serialized.data)
 
-    if request.method == "POST":
-        Advocate.objects.create(
-            profile_pic=request.data["profile_pic"],
-            username=request.data["username"],
-            bio=request.data["bio"],
-        )
-        return Response("Added", status=status.HTTP_201_CREATED)
+
+class SignUp(generics.CreateAPIView):
+    queryset = Advocate.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Add custom claims
+        token["username"] = user.username
+        # Add other custom claims if needed
+
+        return token
+
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
 
 
 @api_view(["GET", "PUT", "DELETE"])
